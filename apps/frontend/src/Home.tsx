@@ -1,70 +1,89 @@
 import { useState } from "react";
-import { Invite, Zrok } from "./../wailsjs/go/main/App";
-import { Input, Button, useToast } from "@chakra-ui/react";
+import { Share, Environment } from "./../types/zrok";
+import toast from "react-hot-toast";
+import { Button, TextField } from "@radix-ui/themes";
+import {
+  Zrok,
+  Invite,
+  Version,
+  Overview,
+} from "../../../frontend/wailsjs/go/main/App";
 
 function Home() {
-  const toast = useToast();
   const [email, setEmail] = useState("");
   const [command, setCommand] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleInvite = async () => {
     const result = await Invite(email);
     const [statusCode, ...statusText] = result.split(" ");
 
     if (statusCode == "201") {
-      toast({
-        title: "Invited",
-        description: "Invite sent to " + email,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+      toast.success("Invite sent to " + email);
     } else {
-      toast({
-        title: "Result",
-        description: statusText.join(" "),
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      toast.error(statusText.join(" "));
     }
   };
 
   const handleEnable = async () => {
+    setLoading(true);
     const commands = command.split(" ").filter((item) => item != "");
     commands.shift();
     const result = await Zrok(commands);
     if (/^\[ERROR\]/.test(result)) {
-      toast({
-        title: "Error",
-        description: result,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      toast.error(result);
     }
+    if (/successfully/.test(result)) {
+      toast.success("the zrok environment was successfully enabled...");
+    }
+    setLoading(false);
+  };
+
+  const handleSharing = async () => {
+    setLoading(true);
+    const commands = command.split(" ").filter((item) => item != "");
+    commands.shift();
+    Zrok(commands);
+    setInterval(() => {
+      getOverview();
+    }, 2000);
   };
 
   const getVersion = async () => {
-    const version = await Zrok(["version"]);
-    toast({
-      title: "Version",
-      description: version.slice(-20),
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
+    const version = await Version();
+    toast.success("Version: " + version.slice(-20));
+  };
+
+  type Environments = {
+    environment: Environment[];
+    shares?: Share[];
+  };
+  const getOverview = async () => {
+    const overview = await Overview();
+    const { environments }: { environments: Environments[] } =
+      JSON.parse(overview);
+
+    console.info(environments);
+    const index = environments.findIndex((environment) =>
+      environment.shares?.filter(
+        (share) => share.backendProxyEndpoint == "http://localhost:300"
+      )
+    );
+    if (index > -1) {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex flex-col gap-2 p-8">
       <div className="flex gap-4 w-full">
-        <Input
+        <TextField.Root
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-        />
+        ></TextField.Root>
         <Button
-          colorScheme="green"
+          color="lime"
           onClick={handleInvite}
         >
           Zrok Invite
@@ -73,20 +92,45 @@ function Home() {
 
       <h2>Enable your zrok account</h2>
       <div className="flex gap-4 w-full">
-        <Input
+        <TextField.Root
+          placeholder="Enable your zrok account"
           value={command}
           onChange={(e) => setCommand(e.target.value)}
-        />
+        ></TextField.Root>
         <Button
-          colorScheme="red"
+          color="blue"
+          loading={loading}
           onClick={handleEnable}
         >
           Enable
         </Button>
       </div>
 
+      <h2>Sharing</h2>
+      <div className="flex gap-4 w-full">
+        <TextField.Root
+          placeholder="Sharing"
+          value={command}
+          onChange={(e) => setCommand(e.target.value)}
+        ></TextField.Root>
+        <Button
+          color="red"
+          loading={loading}
+          onClick={handleSharing}
+        >
+          Sharing
+        </Button>
+      </div>
+
       <Button
-        colorScheme="blue"
+        color="purple"
+        onClick={getOverview}
+      >
+        getOverview
+      </Button>
+
+      <Button
+        color="blue"
         onClick={getVersion}
       >
         获取版本号

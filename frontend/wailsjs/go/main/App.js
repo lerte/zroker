@@ -18,8 +18,16 @@ export function Minimize() {
   return window['go']['main']['App']['Minimize']();
 }
 
+export function Overview() {
+  return window['go']['main']['App']['Overview']();
+}
+
 export function Quit() {
   return window['go']['main']['App']['Quit']();
+}
+
+export function Version() {
+  return window['go']['main']['App']['Version']();
 }
 
 export function Zrok(arg1) {

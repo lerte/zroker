@@ -1,15 +1,12 @@
 import "./style.css";
+import App from "./App";
 import React from "react";
-import router from "./router";
+import "@radix-ui/themes/styles.css";
 import { createRoot } from "react-dom/client";
-import { ChakraProvider } from "@chakra-ui/react";
-import { RouterProvider } from "react-router-dom";
 
 const root = createRoot(document.getElementById("root")!);
 root.render(
   <React.StrictMode>
-    <ChakraProvider>
-      <RouterProvider router={router} />
-    </ChakraProvider>
+    <App />
   </React.StrictMode>
 );

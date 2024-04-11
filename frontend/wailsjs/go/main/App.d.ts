@@ -9,6 +9,10 @@ export function Maximize():Promise<void>;
 
 export function Minimize():Promise<void>;
 
+export function Overview():Promise<string>;
+
 export function Quit():Promise<void>;
+
+export function Version():Promise<string>;
 
 export function Zrok(arg1:Array<string>):Promise<string>;

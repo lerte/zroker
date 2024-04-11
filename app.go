@@ -12,12 +12,15 @@ import (
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"mvdan.cc/xurls/v2"
 )
 
 // App struct
 type App struct {
 	ctx context.Context
 }
+
+var zrokCommand = "./resources/zrok.exe"
 
 
 // NewApp creates a new App application struct
@@ -54,16 +57,6 @@ func (a *App) ChooseFolder() (string, error) {
 	return folder,nil
 }
 
-func (a *App) Invite(email string) string {
-	requestBody := []byte(fmt.Sprintf(`{"email": "%s"}`, email))
-	resp, err := http.Post("https://api.zrok.io/api/v1/invite", "application/zrok.v1+json", bytes.NewBuffer(requestBody))
-	if err != nil {
-		log.Error("发送请求时出错:", err)
-	}
-	defer resp.Body.Close()
-	return resp.Status
-}
-
 func writeToFile(name string, data string) error {
 	f, err := os.OpenFile(name, os.O_CREATE | os.O_APPEND | os.O_WRONLY, 0644)
 	if err != nil {
@@ -77,34 +70,60 @@ func writeToFile(name string, data string) error {
 	return nil
 }
 
+func (a *App) Invite(email string) string {
+  cmd := exec.Command(zrokCommand, "status")
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	output, _ := cmd.Output()
+	xurlsStrict := xurls.Strict()
+	find := xurlsStrict.FindAllString(string(output), -1)
+	apiEndpoint := find[0]
+
+	requestBody := []byte(fmt.Sprintf(`{"email": "%s"}`, email))
+	resp, err := http.Post(apiEndpoint+"/api/v1/invite", "application/zrok.v1+json", bytes.NewBuffer(requestBody))
+	if err != nil {
+		log.Error("发送请求时出错:", err)
+	}
+	defer resp.Body.Close()
+	return resp.Status
+}
+
+func (a *App) Version() string {
+  cmd := exec.Command(zrokCommand, "version")
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	output, _ := cmd.Output()
+	return string(output)
+}
+
+func (a *App) Overview() string {
+	cmd := exec.Command(zrokCommand, "overview")
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	output, _ := cmd.Output()
+	return string(output)
+}
 
 // Zrok
 func (a *App) Zrok(args []string) string {
 	log.Info("Zrok", args)
 	writeToFile("./resources/logs.txt", strings.Join(args, " "))
-	zrokCommand := "./resources/zrok.exe"
-	command := args[0]
-	if command == "enable" {
-		cmd := exec.Command(zrokCommand, args...)
-		cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
-		// 创建一个缓冲区来保存标准错误输出
-		var stderr bytes.Buffer
-		cmd.Stderr = &stderr
-		// 执行命令
-		err := cmd.Run()
-		if err != nil {
-			// 如果命令执行出错，则打印标准错误输出
-			fmt.Println("执行命令时出错:", err)
-			fmt.Println("标准错误输出:", stderr.String())
-			return stderr.String()
-		}
-	
-		// 如果命令执行成功，则打印标准错误输出
-		fmt.Println("标准错误输出:", stderr.String())
-	}
+
 	cmd := exec.Command(zrokCommand, args...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
-	output, _ := cmd.Output()
-	return string(output)
+	// 创建一个缓冲区来保存标准错误输出
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	// 执行命令
+	err := cmd.Run()
+	if err != nil {
+		// 如果命令执行出错，则打印标准错误输出
+		log.Error("执行命令时出错:", err)
+		log.Error("标准错误输出:", stderr.String())
+		return stderr.String()
+	}
+	// 如果命令执行成功，则打印标准输出
+
+	log.Info("标准输出:", stdout.String())
+	return stdout.String()
 }
 
