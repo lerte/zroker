@@ -1,13 +1,20 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
-  "name": "zroker",
+  "name": "Zroker",
   "outputfilename": "zroker",
+
   "frontend:install": "pnpm install",
   "frontend:build": "pnpm run build",
   "frontend:dev:watcher": "pnpm run dev",
   "frontend:dev:serverUrl": "auto",
   "author": {
-    "name": "lerte smith",
+    "name": "Lerte Smith",
     "email": "lerte@qq.com"
+  },
+  "info": {
+    "companyName": "Zroker",
+    "productVersion": "0.0.1",
+    "copyright": "Copyright ©2024 Zroker Inc.",
+    "comments": "A gui client for zrok"
   }
 }

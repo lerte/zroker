@@ -5,19 +5,19 @@
 !include "FileFunc.nsh"
 
 !ifndef INFO_PROJECTNAME
-    !define INFO_PROJECTNAME "{{.Name}}"
+    !define INFO_PROJECTNAME "Zroker"
 !endif
 !ifndef INFO_COMPANYNAME
-    !define INFO_COMPANYNAME "{{.Info.CompanyName}}"
+    !define INFO_COMPANYNAME "Zroker"
 !endif
 !ifndef INFO_PRODUCTNAME
-    !define INFO_PRODUCTNAME "{{.Info.ProductName}}"
+    !define INFO_PRODUCTNAME "Zroker"
 !endif
 !ifndef INFO_PRODUCTVERSION
-    !define INFO_PRODUCTVERSION "{{.Info.ProductVersion}}"
+    !define INFO_PRODUCTVERSION "0.0.1"
 !endif
 !ifndef INFO_COPYRIGHT
-    !define INFO_COPYRIGHT "{{.Info.Copyright}}"
+    !define INFO_COPYRIGHT "Copyright ©2024 Zroker Inc."
 !endif
 !ifndef PRODUCT_EXECUTABLE
     !define PRODUCT_EXECUTABLE "${INFO_PROJECTNAME}.exe"
