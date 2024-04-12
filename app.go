@@ -6,9 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"os/exec"
 	"strings"
-	"syscall"
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -19,8 +17,6 @@ import (
 type App struct {
 	ctx context.Context
 }
-
-var zrokCommand = "./resources/linux-x64-zrok"
 
 
 // NewApp creates a new App application struct
@@ -71,9 +67,9 @@ func writeToFile(name string, data string) error {
 }
 
 func (a *App) Invite(email string) string {
-  cmd := exec.Command(zrokCommand, "status")
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true, Pgid: 0}
-	output, _ := cmd.Output()
+	status := []string{"status"}
+	output, _ := zrokCmd(status).Output()
+
 	xurlsStrict := xurls.Strict()
 	find := xurlsStrict.FindAllString(string(output), -1)
 	apiEndpoint := find[0]
@@ -88,16 +84,14 @@ func (a *App) Invite(email string) string {
 }
 
 func (a *App) Version() string {
-  cmd := exec.Command(zrokCommand, "version")
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true, Pgid: 0}
-	output, _ := cmd.Output()
+	version := []string{"version"}
+	output, _ := zrokCmd(version).Output()
 	return string(output)
 }
 
 func (a *App) Overview() string {
-	cmd := exec.Command(zrokCommand, "overview")
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true, Pgid: 0}
-	output, _ := cmd.Output()
+	overview := []string{"overview"}
+	output, _ := zrokCmd(overview).Output()
 	return string(output)
 }
 
@@ -106,8 +100,7 @@ func (a *App) Zrok(args []string) string {
 	log.Info("Zrok", args)
 	writeToFile("./resources/logs.txt", strings.Join(args, " "))
 
-	cmd := exec.Command(zrokCommand, args...)
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true, Pgid: 0}
+	cmd := zrokCmd(args)
 	// 创建一个缓冲区来保存标准错误输出
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
