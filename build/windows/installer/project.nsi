@@ -96,7 +96,7 @@ SectionEnd
 
 Section "Zrok"
     SetOutPath $INSTDIR\resources
-    File /r ".\..\..\..\resources\*.*"
+    File /r ".\..\..\..\resources\zroke.exe"
 SectionEnd
 
 Section "uninstall" 
