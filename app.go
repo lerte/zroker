@@ -83,6 +83,41 @@ func (a *App) Invite(email string) string {
 	return resp.Status
 }
 
+func (a *App) getEnvZId(status string) (string,string) {
+  arr := strings.Split(status, " ")
+	return arr[len(arr)-4],arr[len(arr)-9]
+}
+
+
+func (a *App) UnShare(shrToken string) string {
+	status := []string{"status", "--secrets"}
+	output, _ := zrokCmd(status).Output()
+
+	envZId, XToken := a.getEnvZId(string(output))
+
+	xurlsStrict := xurls.Strict()
+	find := xurlsStrict.FindAllString(string(output), -1)
+	apiEndpoint := find[0]
+
+	requestBody := []byte(fmt.Sprintf(`{"envZId": "%s", "shrToken": "%s"}`, envZId,shrToken ))
+	log.Info("requestBody", string(requestBody))
+	req, err := http.NewRequest("DELETE", apiEndpoint+"/api/v1/unshare", bytes.NewBuffer(requestBody))
+	req.Header.Add("Content-Type", "application/zrok.v1+json")
+	req.Header.Add("X-Token", XToken)
+
+	if err != nil {
+		log.Error("创建请求出错:", err)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	
+	if err != nil {
+		log.Error("发送请求时出错:", err)
+	}
+	defer resp.Body.Close()
+	return resp.Status
+}
+
 func (a *App) Version() string {
 	version := []string{"version"}
 	output, _ := zrokCmd(version).Output()
@@ -118,5 +153,10 @@ func (a *App) Zrok(args []string) string {
 
 	log.Info("标准输出:", stdout.String())
 	return stdout.String()
+}
+
+// Open link in browser
+func (a *App) OpenExternal(link string) {
+	runtime.BrowserOpenURL(a.ctx, link)
 }
 

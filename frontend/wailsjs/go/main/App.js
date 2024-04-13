@@ -18,12 +18,20 @@ export function Minimize() {
   return window['go']['main']['App']['Minimize']();
 }
 
+export function OpenExternal(arg1) {
+  return window['go']['main']['App']['OpenExternal'](arg1);
+}
+
 export function Overview() {
   return window['go']['main']['App']['Overview']();
 }
 
 export function Quit() {
   return window['go']['main']['App']['Quit']();
+}
+
+export function UnShare(arg1) {
+  return window['go']['main']['App']['UnShare'](arg1);
 }
 
 export function Version() {

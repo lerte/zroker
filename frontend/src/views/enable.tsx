@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { Info } from "lucide-react";
 import toast from "react-hot-toast";
-import { Zrok } from "../../wailsjs/go/main/App";
-import { Card, TextField, Button } from "@radix-ui/themes";
+import { Zrok, OpenExternal } from "../../wailsjs/go/main/App";
+import { Card, Tooltip, Flex, Text, TextField, Button } from "@radix-ui/themes";
 
 const Page = () => {
   const [command, setCommand] = useState("");
@@ -22,22 +23,42 @@ const Page = () => {
   };
 
   return (
-    <Card className="w-full flex flex-col gap-2 p-8">
-      <h2>Enable your zrok account</h2>
-      <div className="flex gap-4 w-full">
+    <Card className="w-full">
+      <Flex
+        gap="6"
+        align="center"
+        justify="center"
+        direction="column"
+        className="h-full max-w-sm mx-auto"
+      >
+        <Text size="6">Enable your zrok account</Text>
+
         <TextField.Root
+          size="3"
           value={command}
+          className="w-full"
           placeholder="Enable your zrok account"
           onChange={(e) => setCommand(e.target.value)}
-        />
+        >
+          <TextField.Slot>
+            <Tooltip content="Copy Enable Your Environment from https://api.zrok.io/">
+              <Info
+                className="cursor-pointer"
+                onClick={() => OpenExternal("https://api.zrok.io/")}
+              />
+            </Tooltip>
+          </TextField.Slot>
+        </TextField.Root>
         <Button
+          size="3"
           color="blue"
+          className="!block !w-full"
           loading={loading}
           onClick={handleEnable}
         >
           Enable
         </Button>
-      </div>
+      </Flex>
     </Card>
   );
 };

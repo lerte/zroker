@@ -1,10 +1,10 @@
 import router from "./router";
-import { useEffect, useState } from "react";
 import { isDark } from "./utils";
+import { Theme } from "@radix-ui/themes";
 import { Toaster } from "react-hot-toast";
+import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import { useAutoDark } from "./hooks/useAutoDark";
-import { Theme, ThemePanel } from "@radix-ui/themes";
 
 const App = () => {
   const [theme] = useAutoDark();
@@ -34,7 +34,6 @@ const App = () => {
           },
         }}
       />
-      <ThemePanel />
     </Theme>
   );
 };

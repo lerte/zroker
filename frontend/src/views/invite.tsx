@@ -1,6 +1,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Card, TextField, Button } from "@radix-ui/themes";
+import { Card, Flex, Text, TextField, Button } from "@radix-ui/themes";
 import { Invite } from "../../wailsjs/go/main/App";
 
 const Page = () => {
@@ -23,21 +23,33 @@ const Page = () => {
   };
 
   return (
-    <Card className="w-full flex flex-col gap-2 p-8">
-      <div className="flex gap-4 w-full">
+    <Card className="w-full">
+      <Flex
+        gap="6"
+        align="center"
+        justify="center"
+        direction="column"
+        className="h-full max-w-sm mx-auto"
+      >
+        <Text size="6">Please input email address</Text>
         <TextField.Root
-          placeholder="Email"
+          size="3"
           value={email}
+          className="w-full"
+          placeholder="Email"
           onChange={(e) => setEmail(e.target.value)}
         />
+
         <Button
+          size="3"
           color="lime"
           loading={loading}
           onClick={handleInvite}
+          className="!block !w-full"
         >
           Zrok Invite
         </Button>
-      </div>
+      </Flex>
     </Card>
   );
 };
