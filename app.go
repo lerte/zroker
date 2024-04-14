@@ -1,16 +1,14 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"fmt"
-	"net/http"
-	"os"
-	"strings"
+	"runtime/debug"
+	"zroker/zrok"
 
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/openziti/zrok/environment"
+	"github.com/openziti/zrok/sdk/golang/sdk"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
-	"mvdan.cc/xurls/v2"
 )
 
 // App struct
@@ -53,106 +51,65 @@ func (a *App) ChooseFolder() (string, error) {
 	return folder,nil
 }
 
-func writeToFile(name string, data string) error {
-	f, err := os.OpenFile(name, os.O_CREATE | os.O_APPEND | os.O_WRONLY, 0644)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-	_, err = f.WriteString(data+"\n")
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func (a *App) Invite(email string) string {
-	status := []string{"status"}
-	output, _ := zrokCmd(status).Output()
-
-	xurlsStrict := xurls.Strict()
-	find := xurlsStrict.FindAllString(string(output), -1)
-	apiEndpoint := find[0]
-
-	requestBody := []byte(fmt.Sprintf(`{"email": "%s"}`, email))
-	resp, err := http.Post(apiEndpoint+"/api/v1/invite", "application/zrok.v1+json", bytes.NewBuffer(requestBody))
-	if err != nil {
-		log.Error("发送请求时出错:", err)
-	}
-	defer resp.Body.Close()
-	return resp.Status
+	return zrok.Invite(email)
 }
 
-func (a *App) getEnvZId(status string) (string,string) {
-  arr := strings.Split(status, " ")
-	return arr[len(arr)-4],arr[len(arr)-9]
+func (a *App) IsEnable() bool {
+	root, _ := environment.LoadRoot()
+	return root.IsEnabled()
+}
+
+func (a *App) Enable(token string) bool {
+	return zrok.Enable(token)
+}
+
+func (a *App) Disable() bool {
+	_,err := environment.LoadRoot()
+	return err == nil
 }
 
 
-func (a *App) UnShare(shrToken string) string {
-	status := []string{"status", "--secrets"}
-	output, _ := zrokCmd(status).Output()
-
-	envZId, XToken := a.getEnvZId(string(output))
-
-	xurlsStrict := xurls.Strict()
-	find := xurlsStrict.FindAllString(string(output), -1)
-	apiEndpoint := find[0]
-
-	requestBody := []byte(fmt.Sprintf(`{"envZId": "%s", "shrToken": "%s"}`, envZId,shrToken ))
-	log.Info("requestBody", string(requestBody))
-	req, err := http.NewRequest("DELETE", apiEndpoint+"/api/v1/unshare", bytes.NewBuffer(requestBody))
-	req.Header.Add("Content-Type", "application/zrok.v1+json")
-	req.Header.Add("X-Token", XToken)
-
-	if err != nil {
-		log.Error("创建请求出错:", err)
-	}
-
-	resp, err := http.DefaultClient.Do(req)
-	
-	if err != nil {
-		log.Error("发送请求时出错:", err)
-	}
-	defer resp.Body.Close()
-	return resp.Status
+func (a *App) DeleteShare(share *sdk.Share) bool {
+	root,_ := environment.LoadRoot()
+	err := sdk.DeleteShare(root, share)
+	return err == nil
 }
 
 func (a *App) Version() string {
-	version := []string{"version"}
-	output, _ := zrokCmd(version).Output()
-	return string(output)
+	bi,ok := debug.ReadBuildInfo()
+	if ok {
+		for _, dep := range bi.Deps {
+			if(dep.Path == "github.com/openziti/zrok") {
+				return dep.Version
+			}
+		}
+	}
+	return "unknown"
 }
 
 func (a *App) Overview() string {
-	overview := []string{"overview"}
-	output, _ := zrokCmd(overview).Output()
-	return string(output)
+	root, err := environment.LoadRoot()
+	if err != nil {
+		return "error"
+	}
+	overview,_ := sdk.Overview(root)
+	return overview
 }
 
-// Zrok
-func (a *App) Zrok(args []string) string {
-	log.Info("Zrok", args)
-	writeToFile("./resources/logs.txt", strings.Join(args, " "))
-
-	cmd := zrokCmd(args)
-	// 创建一个缓冲区来保存标准错误输出
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	// 执行命令
-	err := cmd.Run()
-	if err != nil {
-		// 如果命令执行出错，则打印标准错误输出
-		log.Error("执行命令时出错:", err)
-		log.Error("标准错误输出:", stderr.String())
-		return stderr.String()
+func (a *App) Sharing(shareRequest sdk.ShareRequest) *sdk.Share {
+	root,_ := environment.LoadRoot()
+	share,err := sdk.CreateShare(root, &sdk.ShareRequest{
+		BackendMode: shareRequest.BackendMode,
+		ShareMode:   shareRequest.ShareMode,
+		Frontends:   []string{"public"}, // 不是很懂这个参数
+		Target:      shareRequest.Target,
+	})
+	if(err != nil){
+		log.Error("error", err)
 	}
-	// 如果命令执行成功，则打印标准输出
-
-	log.Info("标准输出:", stdout.String())
-	return stdout.String()
+	log.Info("share", share)
+	return share
 }
 
 // Open link in browser

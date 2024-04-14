@@ -94,10 +94,6 @@ Section
     !insertmacro wails.writeUninstaller
 SectionEnd
 
-Section "Zrok"
-    SetOutPath $INSTDIR\resources
-    File /a ".\..\..\..\resources\zrok.exe"
-SectionEnd
 
 Section "uninstall" 
     !insertmacro wails.setShellContext

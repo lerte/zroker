@@ -1,9 +1,9 @@
-import router from "./router";
+import Zroker from "./Zroker";
 import { isDark } from "./utils";
 import { Theme } from "@radix-ui/themes";
 import { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
-import { RouterProvider } from "react-router-dom";
+import { EnableProvider } from "./contexts/Enable";
 import { useAutoDark } from "./hooks/useAutoDark";
 
 const App = () => {
@@ -22,7 +22,9 @@ const App = () => {
       appearance={theme}
       accentColor="crimson"
     >
-      <RouterProvider router={router} />
+      <EnableProvider>
+        <Zroker />
+      </EnableProvider>
       <Toaster
         position="bottom-right"
         toastOptions={{

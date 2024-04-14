@@ -6,8 +6,24 @@ export function ChooseFolder() {
   return window['go']['main']['App']['ChooseFolder']();
 }
 
+export function DeleteShare(arg1) {
+  return window['go']['main']['App']['DeleteShare'](arg1);
+}
+
+export function Disable() {
+  return window['go']['main']['App']['Disable']();
+}
+
+export function Enable(arg1) {
+  return window['go']['main']['App']['Enable'](arg1);
+}
+
 export function Invite(arg1) {
   return window['go']['main']['App']['Invite'](arg1);
+}
+
+export function IsEnable() {
+  return window['go']['main']['App']['IsEnable']();
 }
 
 export function Maximize() {
@@ -30,14 +46,10 @@ export function Quit() {
   return window['go']['main']['App']['Quit']();
 }
 
-export function UnShare(arg1) {
-  return window['go']['main']['App']['UnShare'](arg1);
+export function Sharing(arg1) {
+  return window['go']['main']['App']['Sharing'](arg1);
 }
 
 export function Version() {
   return window['go']['main']['App']['Version']();
-}
-
-export function Zrok(arg1) {
-  return window['go']['main']['App']['Zrok'](arg1);
 }
