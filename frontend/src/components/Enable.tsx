@@ -20,7 +20,7 @@ const EnablePage = () => {
     } else {
       const ok = await Enable(token);
       if (ok) {
-        toast.success("Enable success");
+        toast.success("Enabled successfully");
         setEnable(true);
       } else {
         toast.error("Enable failed");

@@ -7,7 +7,7 @@ import { EnableProvider } from "./contexts/Enable";
 import { useAutoDark } from "./hooks/useAutoDark";
 
 const App = () => {
-  const [theme] = useAutoDark();
+  const [theme, setTheme] = useAutoDark();
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const App = () => {
       accentColor="crimson"
     >
       <EnableProvider>
-        <Zroker />
+        <Zroker setTheme={setTheme} />
       </EnableProvider>
       <Toaster
         position="bottom-right"

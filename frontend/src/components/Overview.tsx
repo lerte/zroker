@@ -2,8 +2,8 @@ import dayjs from "dayjs";
 import Sharing from "./Sharing";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
-import { XCircle, CopyIcon, Plus, Delete, RefreshCw } from "lucide-react";
 import { Share, Environment } from "../../types/zrok";
+import { XCircle, CopyIcon, Plus, Delete, RefreshCw } from "lucide-react";
 import { Overview, OpenExternal, DeleteShare } from "../../wailsjs/go/main/App";
 import {
   Box,
@@ -12,11 +12,12 @@ import {
   Link,
   Table,
   Badge,
+  Card,
   Button,
   Dialog,
   ScrollArea,
+  IconButton,
   Separator,
-  Card,
 } from "@radix-ui/themes";
 
 type Environments = {
@@ -35,6 +36,7 @@ const Page = () => {
   const getOverview = async () => {
     setLoading(true);
     const overview = await Overview();
+    console.log(overview);
 
     const { environments }: { environments: Environments[] } =
       JSON.parse(overview);
@@ -48,11 +50,15 @@ const Page = () => {
 
   useEffect(() => {
     if (!loading) {
-      setShares(environments[0]?.shares?.reverse() ?? []);
+      setShares(environments[1]?.shares?.reverse() ?? []);
     }
   }, [loading]);
 
-  const handleClickFrontendEndpoint = (url: string) => {
+  const openExternal = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    url: string
+  ) => {
+    event.stopPropagation();
     if (url == "private") {
       return;
     }
@@ -72,10 +78,10 @@ const Page = () => {
     });
 
     if (ok) {
-      toast.success("删除成功");
+      toast.success("Delete successful");
       setShares([...shares.filter((item) => item.token != share.token)]);
     } else {
-      toast.error("删除失败");
+      toast.error("Delete failed");
     }
     setIsLoading(false);
     setCurrent({} as Share);
@@ -151,11 +157,11 @@ const Page = () => {
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeaderCell>backendMode</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>shareMode</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>frontendEndpoint</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>
                 backendProxyEndpoint
               </Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>frontendEndpoint</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>shareMode</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>createdAt</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>actions</Table.ColumnHeaderCell>
             </Table.Row>
@@ -190,7 +196,9 @@ const Page = () => {
                 <Table.Cell>
                   <Link
                     href="#"
-                    onClick={() => OpenExternal(share.backendProxyEndpoint)}
+                    onClick={(event) =>
+                      openExternal(event, share.backendProxyEndpoint)
+                    }
                   >
                     {share.backendProxyEndpoint}
                   </Link>
@@ -201,8 +209,8 @@ const Page = () => {
                   ) : (
                     <Link
                       href="#"
-                      onClick={() =>
-                        handleClickFrontendEndpoint(share.frontendEndpoint)
+                      onClick={(event) =>
+                        openExternal(event, share.frontendEndpoint)
                       }
                     >
                       {share.frontendEndpoint}
@@ -257,7 +265,9 @@ const Page = () => {
               >
                 {current.token}
               </Text>
-              <CopyIcon className="cursor-pointer" />
+              <IconButton variant="ghost">
+                <CopyIcon className="cursor-pointer" />
+              </IconButton>
             </Flex>
             <Flex gap="5">
               <Text
@@ -272,7 +282,23 @@ const Page = () => {
               >
                 {current.zId}
               </Text>
-              <CopyIcon className="cursor-pointer" />
+              <IconButton variant="ghost">
+                <CopyIcon className="cursor-pointer" />
+              </IconButton>
+            </Flex>
+            <Flex gap="5">
+              <Text
+                size="5"
+                className="basis-1/5"
+              >
+                createdAt
+              </Text>
+              <Text
+                size="5"
+                className="basis-3/5"
+              >
+                {dayjs(current.createdAt).format("YYYY/M/DD HH:mm:ss")}
+              </Text>
             </Flex>
             <Flex gap="5">
               <Text

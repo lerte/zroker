@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-type Theme = "inherit" | "light" | "dark";
+export type Theme = "inherit" | "light" | "dark";
 
 export const useAutoDark = () => {
   const [theme, setTheme] = useState<Theme>("dark");
