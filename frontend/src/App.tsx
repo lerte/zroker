@@ -23,7 +23,10 @@ const App = () => {
       accentColor="crimson"
     >
       <EnableProvider>
-        <Zroker setTheme={setTheme} />
+        <Zroker
+          theme={theme}
+          setTheme={setTheme}
+        />
       </EnableProvider>
       <Toaster
         position="bottom-right"

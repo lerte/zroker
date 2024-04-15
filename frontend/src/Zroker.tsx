@@ -1,12 +1,17 @@
-import { isDark } from "./utils";
 import Login from "./components/Login";
+import { Sun, Moon } from "lucide-react";
 import Overview from "./components/Overview";
 import { useEnable } from "./contexts/Enable";
-import { Sun, Moon } from "lucide-react";
 import { Theme } from "./hooks/useAutoDark";
 import { Box, Button, Flex } from "@radix-ui/themes";
 
-const Zroker = ({ setTheme }: { setTheme: (theme: Theme) => void }) => {
+const Zroker = ({
+  theme,
+  setTheme,
+}: {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+}) => {
   const { enable } = useEnable();
 
   return (
@@ -17,9 +22,9 @@ const Zroker = ({ setTheme }: { setTheme: (theme: Theme) => void }) => {
           size="4"
           radius="full"
           variant="ghost"
-          onClick={() => setTheme(isDark() ? "light" : "dark")}
+          onClick={() => setTheme(theme == "dark" ? "light" : "dark")}
         >
-          {isDark() ? <Moon /> : <Sun />}
+          {theme == "dark" ? <Moon /> : <Sun />}
         </Button>
       </Box>
     </Flex>
