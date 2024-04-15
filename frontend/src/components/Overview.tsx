@@ -50,7 +50,7 @@ const Page = () => {
 
   useEffect(() => {
     if (!loading) {
-      setShares(environments[1]?.shares?.reverse() ?? []);
+      setShares(environments[0]?.shares?.reverse() ?? []);
     }
   }, [loading]);
 
