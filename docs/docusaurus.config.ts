@@ -37,15 +37,13 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+          editUrl: "https://github.com/lerte/zroker/blob/main/docs/",
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+          editUrl: "https://github.com/lerte/zroker/blob/main/docs/",
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -72,9 +70,15 @@ const config: Config = {
         },
         { to: "/blog", label: "Blog", position: "left" },
         {
-          href: "https://github.com/lerte/zroker",
-          label: "GitHub",
+          href: "https://github.com/lerte/zroker/releases",
+          label: "Download",
+          position: "left",
+        },
+        {
           position: "right",
+          className: "header-github-link",
+          "aria-label": "GitHub repository",
+          href: "https://github.com/lerte/zroker",
         },
       ],
     },
@@ -94,16 +98,12 @@ const config: Config = {
           title: "Community",
           items: [
             {
-              label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
-            },
-            {
-              label: "Discord",
-              href: "https://discordapp.com/invite/docusaurus",
+              label: "Github",
+              href: "https://github.com/lerte/zroker",
             },
             {
               label: "Twitter",
-              href: "https://twitter.com/docusaurus",
+              href: "https://x.com/engroker",
             },
           ],
         },
@@ -115,13 +115,13 @@ const config: Config = {
               to: "/blog",
             },
             {
-              label: "GitHub",
-              href: "https://github.com/facebook/docusaurus",
+              label: "Ngroker",
+              href: "https://ngroker.com",
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Zroker, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Zroker, Inc. Built ♥ by Ngroker.`,
     },
     prism: {
       theme: prismThemes.github,
