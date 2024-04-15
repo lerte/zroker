@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"net/http"
 	"runtime/debug"
 	"zroker/zrok"
 
@@ -103,5 +104,13 @@ func (a *App) Sharing(shareRequest sdk.ShareRequest) *sdk.Share {
 // Open link in browser
 func (a *App) OpenExternal(link string) {
 	runtime.BrowserOpenURL(a.ctx, link)
+}
+
+// Request Url
+func (a *App) Request(url string) int {
+
+	resp,_ := http.Get(url+"/api/v1/invite")
+
+	return resp.StatusCode
 }
 

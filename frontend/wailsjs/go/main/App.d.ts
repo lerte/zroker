@@ -24,6 +24,8 @@ export function Overview():Promise<string>;
 
 export function Quit():Promise<void>;
 
+export function Request(arg1:string):Promise<number>;
+
 export function Sharing(arg1:sdk.ShareRequest):Promise<sdk.Share>;
 
 export function Version():Promise<string>;

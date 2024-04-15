@@ -19,6 +19,7 @@ import {
   IconButton,
   Separator,
 } from "@radix-ui/themes";
+import FrontendEndpoint from "./FrontendEndpoint";
 
 type Environments = {
   environment: Environment[];
@@ -26,7 +27,7 @@ type Environments = {
 };
 
 const Page = () => {
-  // 当前的Share
+  // current Share
   const [current, setCurrent] = useState<Partial<Share>>({} as Share);
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,6 +64,17 @@ const Page = () => {
       return;
     }
     OpenExternal(url);
+  };
+
+  const handleCopy = (str: string | undefined) => {
+    navigator.clipboard
+      .writeText(str ?? "")
+      .then(() => {
+        toast.success("Copy successful");
+      })
+      .catch(() => {
+        toast.error("Copy failed");
+      });
   };
 
   const handleDelete = async (
@@ -158,10 +170,10 @@ const Page = () => {
             <Table.Row>
               <Table.ColumnHeaderCell>backendMode</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>shareMode</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>frontendEndpoint</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>
                 backendProxyEndpoint
               </Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>frontendEndpoint</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>createdAt</Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell>actions</Table.ColumnHeaderCell>
             </Table.Row>
@@ -186,7 +198,7 @@ const Page = () => {
                 <Table.Cell>
                   <Badge
                     size="3"
-                    color="cyan"
+                    color={share.shareMode == "private" ? "red" : "green"}
                     radius="full"
                     variant="soft"
                   >
@@ -207,26 +219,20 @@ const Page = () => {
                   {share.frontendEndpoint == "private" ? (
                     <Text>{share.frontendEndpoint}</Text>
                   ) : (
-                    <Link
-                      href="#"
-                      onClick={(event) =>
-                        openExternal(event, share.frontendEndpoint)
-                      }
-                    >
-                      {share.frontendEndpoint}
-                    </Link>
+                    <FrontendEndpoint share={share} />
                   )}
                 </Table.Cell>
                 <Table.Cell>
-                  {dayjs(share.createdAt).format("YYYY/M/DD HH:mm:ss")}
+                  {dayjs(share.createdAt).format("M/DD HH:mm:ss")}
                 </Table.Cell>
                 <Table.Cell>
                   <Button
-                    variant="solid"
+                    radius="full"
+                    variant="ghost"
                     onClick={(event) => handleDelete(event, share)}
                     loading={current.token == share.token && isLoading}
                   >
-                    <Delete /> Delete
+                    <Delete />
                   </Button>
                 </Table.Cell>
               </Table.Row>
@@ -265,7 +271,10 @@ const Page = () => {
               >
                 {current.token}
               </Text>
-              <IconButton variant="ghost">
+              <IconButton
+                variant="ghost"
+                onClick={() => handleCopy(current.token)}
+              >
                 <CopyIcon className="cursor-pointer" />
               </IconButton>
             </Flex>
@@ -282,7 +291,10 @@ const Page = () => {
               >
                 {current.zId}
               </Text>
-              <IconButton variant="ghost">
+              <IconButton
+                variant="ghost"
+                onClick={() => handleCopy(current.zId)}
+              >
                 <CopyIcon className="cursor-pointer" />
               </IconButton>
             </Flex>

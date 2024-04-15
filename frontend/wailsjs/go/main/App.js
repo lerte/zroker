@@ -46,6 +46,10 @@ export function Quit() {
   return window['go']['main']['App']['Quit']();
 }
 
+export function Request(arg1) {
+  return window['go']['main']['App']['Request'](arg1);
+}
+
 export function Sharing(arg1) {
   return window['go']['main']['App']['Sharing'](arg1);
 }
