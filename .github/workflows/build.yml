@@ -26,6 +26,12 @@ jobs:
         run: pnpm install
       - uses: dAppServer/wails-build-action@v2.2
         with:
+          package: false
           node-version: 20
           build-name: ${{ matrix.build.name }}
           build-platform: ${{ matrix.build.platform }}
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: ${{startsWith(github.ref, 'refs/tags/') }}
+        with:
+          files: build/bin/*
