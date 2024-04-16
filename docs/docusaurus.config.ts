@@ -66,14 +66,9 @@ const config: Config = {
           type: "docSidebar",
           sidebarId: "tutorialSidebar",
           position: "left",
-          label: "Tutorial",
+          label: "Docs",
         },
-        { to: "/blog", label: "Blog", position: "left" },
-        {
-          href: "https://github.com/lerte/zroker/releases",
-          label: "Download",
-          position: "left",
-        },
+        { to: "/download", label: "Download", position: "left" },
         {
           position: "right",
           className: "header-github-link",
@@ -89,8 +84,16 @@ const config: Config = {
           title: "Docs",
           items: [
             {
-              label: "Tutorial",
-              to: "/docs/intro",
+              label: "Invite",
+              to: "/docs/invite",
+            },
+            {
+              label: "Enable",
+              to: "/docs/enable",
+            },
+            {
+              label: "Overview",
+              to: "/docs/overview",
             },
           ],
         },
@@ -111,8 +114,8 @@ const config: Config = {
           title: "More",
           items: [
             {
-              label: "Blog",
-              to: "/blog",
+              label: "Download",
+              to: "/download",
             },
             {
               label: "Ngroker",

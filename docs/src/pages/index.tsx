@@ -26,6 +26,12 @@ function HomepageHeader() {
           >
             Quick start
           </Link>
+          <Link
+            className="button button--info button--lg"
+            to="/download"
+          >
+            Download
+          </Link>
         </div>
       </div>
     </header>
@@ -33,11 +39,10 @@ function HomepageHeader() {
 }
 
 export default function Home(): JSX.Element {
-  const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
+      title="zrok gui clinet"
+      description="open source, writen in wails"
     >
       <HomepageHeader />
       <main>

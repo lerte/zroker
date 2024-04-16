@@ -29,6 +29,10 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
+.main-wrapper {
+  justify-content: center;
+}
+
 .header-github-link::before {
   content: "";
   width: 24px;
