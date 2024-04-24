@@ -41,7 +41,7 @@ function HomepageHeader() {
 export default function Home(): JSX.Element {
   return (
     <Layout
-      title="zrok gui clinet"
+      title="zrok gui client"
       description="open source, writen in wails"
     >
       <HomepageHeader />
