@@ -1,0 +1,41 @@
+{
+  "name": "zrok",
+  "version": "0.0.10",
+  "author": "Lerte Smith <lertesmith@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lerte/zroker.git"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@types/bun": "^1.1.0",
+    "@types/cli-progress": "^3.11.5",
+    "bun-plugin-dts": "^0.2.3",
+    "chalk": "^5.3.0",
+    "cli-progress": "^3.12.0",
+    "inly": "^5.0.1",
+    "typescript": "^5.4.5"
+  },
+  "bugs": "https://github.com/lerte/zroker/issues",
+  "description": "node wrapper for zrok",
+  "files": [
+    "bin/.gitkeep",
+    "dist"
+  ],
+  "homepage": "https://zroker.com",
+  "keywords": [
+    "zrok",
+    "zroker",
+    "localhost",
+    "tunneling"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "test": "bun test",
+    "build": "bun run build.mjs",
+    "prepublishOnly": "bun run build",
+    "postinstall": "node ./dist/install.js"
+  },
+  "types": "dist/index.d.ts"
+}
