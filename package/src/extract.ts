@@ -18,7 +18,7 @@ export default function (filename: string) {
     });
     extract.on("end", () => {
       if (process.platform != "win32") {
-        fs.chmodSync("/bin/zrok", 0o755);
+        fs.chmodSync(from, 0o755);
       }
       resolve(true);
     });

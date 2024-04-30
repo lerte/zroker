@@ -1,6 +1,6 @@
 {
   "name": "zrok",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "author": "Lerte Smith <lertesmith@gmail.com>",
   "repository": {
     "type": "git",
@@ -37,5 +37,8 @@
     "prepublishOnly": "bun run build",
     "postinstall": "node ./dist/install.js"
   },
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com"
+  }
 }
