@@ -6,7 +6,6 @@
     "type": "git",
     "url": "git+https://github.com/lerte/zroker.git"
   },
-  "type": "module",
   "main": "dist/index.js",
   "devDependencies": {
     "@types/bun": "^1.1.0",
@@ -32,16 +31,17 @@
     "tunneling"
   ],
   "license": "MIT",
-  "scripts": {
-    "test": "bun test",
-    "build": "bun run build.mjs",
-    "prepublishOnly": "bun run build"
-  },
-  "types": "dist/index.d.ts",
   "publishConfig": {
     "registry": "https://registry.npmjs.com",
     "scripts": {
       "postinstall": "node ./dist/install.js"
     }
-  }
+  },
+  "scripts": {
+    "test": "bun test",
+    "build": "bun run build.mjs",
+    "prepublishOnly": "bun run build"
+  },
+  "type": "module",
+  "types": "dist/index.d.ts"
 }

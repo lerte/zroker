@@ -2,17 +2,37 @@
   "name": "zroker",
   "version": "0.0.1",
   "description": "a gui client for zrok",
+  "files": [
+    "package/bin/.gitkeep",
+    "package/dist"
+  ],
+  "type": "module",
+  "types": "dist/index.d.ts",
   "keywords": [
     "zrok",
     "zroker",
+    "localhost",
+    "tunneling",
     "zrok gui client"
   ],
-  "author": "Lerte Smith",
+  "homepage": "https://zroker.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lerte/zroker.git"
+  },
+  "author": "Lerte Smith <lertesmith@gmail.com>",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build"
   },
-  "dependencies": {
-    "turbo": "^1.13.2"
+  "devDependencies": {
+    "turbo": "^1.13.3"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com",
+    "scripts": {
+      "postinstall": "node ./dist/install.js"
+    }
   }
 }
