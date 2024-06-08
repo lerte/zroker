@@ -7,6 +7,7 @@ Now available on `Windows`, `macOS`,`Linux`.
 
 Official website: [https://zroker.com](https://zroker.com)
 
+![overview](https://github.com/lerte/zroker/assets/15228321/6a5289ed-d07c-42e8-a8cf-5fe14bcf72df)
 # zrok is node wrapper for zrok
 
 ## To install dependencies:
