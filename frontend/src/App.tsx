@@ -1,9 +1,10 @@
-import Zroker from "./Zroker";
-import { isDark } from "./utils";
+import { useEffect, useState } from "react";
+
+import { EnableProvider } from "./contexts/Enable";
 import { Theme } from "@radix-ui/themes";
 import { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import { EnableProvider } from "./contexts/Enable";
+import Zroker from "./Zroker";
+import { isDark } from "./utils";
 import { useAutoDark } from "./hooks/useAutoDark";
 
 const App = () => {

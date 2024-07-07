@@ -1,6 +1,16 @@
+import {
+  Button,
+  Card,
+  Flex,
+  IconButton,
+  Select,
+  Text,
+  TextField,
+} from "@radix-ui/themes";
+import { ChooseFolder, Sharing } from "../../wailsjs/go/main/App";
+import { Ellipsis, Folder } from "lucide-react";
+
 import { useState } from "react";
-import { Sharing } from "../../wailsjs/go/main/App";
-import { Flex, Card, Text, TextField, Button, Select } from "@radix-ui/themes";
 
 enum BackendMode {
   WebBackendMode = "web",
@@ -20,6 +30,7 @@ export default ({ onFinished }: { onFinished: () => void }) => {
   const [loading, setLoading] = useState(false);
   const [hostport, setHostport] = useState("5173");
   const [hostname, setHostname] = useState("localhost");
+  const [folder, setFolder] = useState(""); // for driver backend mode
   // share mode
   const [shareMode, setShareMode] = useState(ShareMode.PublicShareMode);
   // backend mode
@@ -27,14 +38,28 @@ export default ({ onFinished }: { onFinished: () => void }) => {
     BackendMode.ProxyBackendMode
   );
 
+  const handleSelectFolder = async () => {
+    const path = await ChooseFolder();
+    setFolder(path);
+  };
+
   const handleSharing = async () => {
     setLoading(true);
 
-    const options = {
-      ShareMode: shareMode,
-      BackendMode: backendMode,
-      Target: `http://${hostname}:${hostport}`,
-    };
+    let options = null;
+    if (backendMode == BackendMode.DriveBackendMode) {
+      options = {
+        ShareMode: shareMode,
+        BackendMode: backendMode,
+        Target: folder,
+      };
+    } else {
+      options = {
+        ShareMode: shareMode,
+        BackendMode: backendMode,
+        Target: `http://${hostname}:${hostport}`,
+      };
+    }
 
     const share = await Sharing(options);
     if (share.token) {
@@ -76,7 +101,7 @@ export default ({ onFinished }: { onFinished: () => void }) => {
 
         <Select.Root
           size="3"
-          value={BackendMode.ProxyBackendMode}
+          value={backendMode}
           onValueChange={setBackendMode as (value: BackendMode) => void}
         >
           <Select.Trigger className="!w-full" />
@@ -96,41 +121,64 @@ export default ({ onFinished }: { onFinished: () => void }) => {
           </Select.Content>
         </Select.Root>
 
-        <Flex
-          gap="4"
-          align="center"
-          className="w-full"
-        >
-          <Text>
-            <label htmlFor="hostname">Hostname</label>
-          </Text>
-          <TextField.Root
-            size="3"
-            id="hostname"
-            value={hostname}
-            className="w-full"
-            placeholder="Input hostname"
-            onChange={(e) => setHostname(e.target.value)}
-          />
-        </Flex>
+        {backendMode == BackendMode.DriveBackendMode ? (
+          <>
+            <TextField.Root
+              size="3"
+              value={folder}
+              className="w-full"
+              placeholder="Select Folder"
+              onChange={(e) => setFolder(e.target.value)}
+            >
+              <TextField.Slot>
+                <Folder />
+              </TextField.Slot>
+              <TextField.Slot>
+                <IconButton onClick={handleSelectFolder}>
+                  <Ellipsis />
+                </IconButton>
+              </TextField.Slot>
+            </TextField.Root>
+          </>
+        ) : (
+          <>
+            <Flex
+              gap="4"
+              align="center"
+              className="w-full"
+            >
+              <Text>
+                <label htmlFor="hostname">Hostname</label>
+              </Text>
+              <TextField.Root
+                size="3"
+                id="hostname"
+                value={hostname}
+                className="w-full"
+                placeholder="Input hostname"
+                onChange={(e) => setHostname(e.target.value)}
+              />
+            </Flex>
 
-        <Flex
-          gap="4"
-          align="center"
-          className="w-full"
-        >
-          <Text>
-            <label htmlFor="hostport">Hostname</label>
-          </Text>
-          <TextField.Root
-            size="3"
-            id="hostport"
-            value={hostport}
-            className="w-full"
-            placeholder="Input hostport"
-            onChange={(e) => setHostport(e.target.value)}
-          />
-        </Flex>
+            <Flex
+              gap="4"
+              align="center"
+              className="w-full"
+            >
+              <Text>
+                <label htmlFor="hostport">Hostport</label>
+              </Text>
+              <TextField.Root
+                size="3"
+                id="hostport"
+                value={hostport}
+                className="w-full"
+                placeholder="Input hostport"
+                onChange={(e) => setHostport(e.target.value)}
+              />
+            </Flex>
+          </>
+        )}
         <Button
           color="blue"
           loading={loading}

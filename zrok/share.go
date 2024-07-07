@@ -13,7 +13,7 @@ func Sharing(shareRequest sdk.ShareRequest) *sdk.Share {
 	share, err := sdk.CreateShare(root, &sdk.ShareRequest{
 		BackendMode: shareRequest.BackendMode,
 		ShareMode:   shareRequest.ShareMode,
-		Frontends:   []string{"public"}, // 不是很懂这个参数
+		Frontends:   []string{"public"},
 		Target:      shareRequest.Target,
 	})
 	if err != nil {
